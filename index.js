@@ -1,7 +1,11 @@
 const express = require('express');
 const app = express();
-
 const port = 8000;
+// connection to mongoose
+const db = require('./config/mongoose');
+
+// for form body
+app.use(express.urlencoded());
 
 // routes
 app.use('/', require('./routes'));
