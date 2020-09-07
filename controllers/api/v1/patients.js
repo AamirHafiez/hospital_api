@@ -54,3 +54,33 @@ module.exports.createReport = async function(req, res){
         });
     }
 }
+
+// show all reports of a patient
+module.exports.showAllReports = async function(req, res){
+    try {
+        let patient = await Patient.findById(req.params.id).populate({
+            path: 'reports',
+            populate: [{
+                path: 'doctor'
+            },{
+                path: 'patient'
+            }]
+        })
+        .sort({'createdAt' : 'asc'});
+        if(!patient){
+            return res.json(404, {
+                message: 'Patient not found'
+            });
+        }else{
+            return res.json(200, {
+                message: 'All reports of Patient',
+                data: patient.reports
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(500, {
+            message: 'Internal Server Error'
+        });
+    }
+}
